@@ -3,26 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\ReservedRoom;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Repositories\ReservedRoomRepository;
+use App\Repositories\UserRepository;
 
 class TestController extends Controller
 {
     public function test()
     {
-        $user = (new User())
-            ->where('id', 1)
-            ->whereHas('roles', function ($query) {
-                $query
-                    ->where('role_id', 1);
-            })
-            ->first();
+        $userRepository = new UserRepository();
+        $reservedRoomRepository = new ReservedRoomRepository();
 
-        if (!empty($user)) {
-            return true;
-        } else {
-            return false;
-        }
-        dd($user);
+
+
+
+
+       dd($reservedRoomRepository->getAllForUser((new User)->where('id', 1)->first()));
+
+
     }
 }

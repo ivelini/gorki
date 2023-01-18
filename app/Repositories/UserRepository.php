@@ -55,4 +55,13 @@ class UserRepository extends CoreRepository
             return false;
         }
     }
+
+    public function getUser($id)
+    {
+        $user = $this->getModel('id', $id);
+        $user->role = $user->roles->first()->name;
+        $user = $this->modelsAttributesToArray($user);
+
+        return $user;
+    }
 }

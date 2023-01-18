@@ -18,13 +18,17 @@ use App\Http\Controllers\Api\ReservedRoomController;
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::group(['prefix' => 'user'], function () {
-        Route::get('/user', function (Request $request) {
-            return $request->user();
+        Route::get('/', function (Request $request) {
+            $user = $request->user();
+            $user->role = $user->roles->first()->name;
+            return $user;
         });
     });
 
     Route::group(['prefix' => 'rooms'], function () {
         Route::post('', [ReservedRoomController::class, 'store']);
+        Route::get('', [ReservedRoomController::class, 'index']);
+        Route::delete('/{id}', [ReservedRoomController::class, 'destroy']);
+        Route::put('/{id}', [ReservedRoomController::class, 'update']);
     });
-
 });

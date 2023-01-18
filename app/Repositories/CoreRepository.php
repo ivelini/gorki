@@ -24,5 +24,19 @@ abstract class CoreRepository
         return $this->model->where($attribute, $value)->first();
     }
 
+    public function modelsAttributesToArray($models)
+    {
+        $models =  $models->map(function ($item) {
+            $arr = $item->getAttributes();
 
+            if (count($arr) == 1) {
+                $firstKey = array_key_first($arr);
+                return $arr[$firstKey];
+            }
+
+            return $arr;
+        });
+
+        return $models;
+    }
 }

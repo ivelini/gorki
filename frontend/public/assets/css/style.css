@@ -420,7 +420,6 @@ footer {
     -webkit-box-shadow: 0 5px 15px 0 rgba(0,0,0,.05) inset;
     box-shadow: 0 5px 15px 0 rgba(0,0,0,.05) inset;
     bottom: 0;
-    position: absolute;
     width: 100%;
 }
 

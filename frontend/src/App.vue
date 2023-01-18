@@ -14,14 +14,11 @@
                                 <li>
                                     <router-link :to="{ name: 'home' }">Забронировать</router-link>
                                 </li>
-                                <li v-show="user.name">
-                                    <router-link :to="{ name: 'list' }">Список</router-link>
-                                </li>
-                                <li v-if="!user.name">
+                                <li v-if="!this.$store.getters.getUser.name">
                                     <a href="/register">Регистрация</a>
                                 </li>
                                 <li v-else>
-                                    <a @click="deleteToken">{{ user.name }} - Выход</a>
+                                    <a @click="deleteToken" style="cursor: pointer">{{ this.$store.getters.getUser.name }} - Выход</a>
                                 </li>
                             </ul>
                         </div>
@@ -33,6 +30,7 @@
 
     <router-view/>
 
+    <div>
     <footer>
         <div class="container">
             <div class="row">
@@ -42,9 +40,12 @@
             </div>
         </div>
     </footer>
+    </div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+
 export default {
     data() {
         return {
@@ -52,7 +53,8 @@ export default {
               domain: 'http://127.0.0.1:8000'
             },
             user: {
-                name: ''
+                name: '',
+                isAdmin: false
             }
         }
     },
@@ -62,6 +64,7 @@ export default {
         }
     },
     methods: {
+        ...mapMutations(['registeredUser']),
         async getUser() {
             let response = await fetch(`${ this.api.domain }/api/user`, {
                 method: 'GET',
@@ -72,8 +75,7 @@ export default {
             })
 
             let user = await response.json();
-
-            this.user.name = user.name
+            this.$store.commit('registeredUser', user)
         },
         getToken() {
             return localStorage.getItem('token')

@@ -22,6 +22,7 @@
     </div>
 
         <filter-component
+            v-show="this.$store.getters.getUser.isAdmin"
             @set-filter="addFilter($event)"/>
 
         <reserved-room-component

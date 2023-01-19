@@ -14,9 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//Для тестов
 Route::domain('test.gorki')->group(function () {
     Route::get('/', [\App\Http\Controllers\TestController::class, 'test']);
 });
+
 
 Route::get('/{any?}', function ($any = null) {
     if($any == 'login') {

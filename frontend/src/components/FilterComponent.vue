@@ -41,7 +41,11 @@ export default {
         filter: {
             handler(val) {
                 for (let key in val) {
-                    if (val[key] != null) this.urlFilter[key] = val[key]
+                    if (val[key] != null && val[key] != '') {
+                        this.urlFilter[key] = val[key]
+                    } else {
+                        delete this.urlFilter[key]
+                    }
                 }
                 this.$emit('setFilter', this.urlFilter)
             },

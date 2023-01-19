@@ -12,15 +12,21 @@ class ReservedRoomRepository extends CoreRepository
         return Model::class;
     }
 
-    public function getAll()
+    public function getAll( $query = [])
     {
         $models = $this->startConditions()
             ->with('user')
-            ->orderBy('id', 'DESC')
-            ->get();
+            ->orderBy('id', 'DESC');
+
+        if (array_key_exists('user_id', $query)) $models = $models->where('user_id', $query['user_id']);
+        if (array_key_exists('is_appruved', $query)) $models = $models->where('is_appruved', $query['is_appruved']);
+        if (array_key_exists('limit', $query)) $models = $models->take($query['limit']);
+
+        $models = $models->get();
 
         $models = $this->setAppruveStatus($models);
         $arr = $this->modelsAttributesToArray($models);
+
 
         return $arr;
     }

@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\ReservedRoom;
 use App\Repositories\ReservedRoomRepository;
+use Illuminate\Support\Facades\Route;
 
 class ReservedRoomController extends Controller
 {
@@ -19,10 +20,19 @@ class ReservedRoomController extends Controller
     {
         $user = $request->user();
 
+        $url = url()->full();
+        $parts = parse_url($url);
+
+        if (array_key_exists('query', $parts)) {
+            parse_str($parts['query'], $query);
+        }  else {
+            $query = [];
+        }
+
         $reservedRoomRepository = new ReservedRoomRepository();
 
         $reserve = ($user->roles->first()->name == 'Administrator') ?
-            $reservedRoomRepository->getAll() :
+            $reservedRoomRepository->getAll($query) :
             $reservedRoomRepository->getAllForUser($user);
 
         return $reserve;

@@ -21,21 +21,27 @@
         </div>
     </div>
 
-        <reserved-room-component v-for="room in reservedRooms" :key="room.id"
-                                 :room="room"
-                                 @set-edit="onSetEdit($event)"
-                                 @set-delete="deleteReservRoom($event)"/>
+        <filter-component
+            @set-filter="addFilter($event)"/>
+
+        <reserved-room-component
+            v-for="room in reservedRooms" :key="room.id"
+            :room="room"
+            @set-edit="onSetEdit($event)"
+            @set-delete="deleteReservRoom($event)"/>
 
     </div>
 </template>
 <script>
 import HeaderContent from "@/components/HeaderContent";
 import ReservedRoomComponent from "@/components/ReservedRoomComponent";
+import FilterComponent from "@/components/FilterComponent";
 
 export default {
     components: {
         HeaderContent,
-        ReservedRoomComponent
+        ReservedRoomComponent,
+        FilterComponent
     },
     data() {
         return {
@@ -82,8 +88,11 @@ export default {
                 }
             }
         },
-        async getListReservedRooms() {
-            let response = await fetch(`${ this.$store.getters.getApiDomain }/api/rooms`, {
+        async getListReservedRooms(filter = null) {
+            let url = `${ this.$store.getters.getApiDomain }/api/rooms`
+            if (filter != null) url += filter
+
+            let response = await fetch(url, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${ this.$store.getters.getApiToken }`
@@ -119,6 +128,15 @@ export default {
 
             if (result.status == 'OK') await this.getListReservedRooms()
 
+        },
+        addFilter(urlFilter) {
+            this.$router.replace({name: 'home', query: urlFilter });
+            let query = ''
+            for(let key in urlFilter) {
+                query += `&${ key }=${ urlFilter[key] }`
+            }
+            query = query.replace('&', '?')
+            this.getListReservedRooms(query)
         }
     }
 

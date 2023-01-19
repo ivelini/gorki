@@ -33,8 +33,8 @@ class ReservedRoomRepository extends CoreRepository
             ->orderBy('id', 'DESC')
             ->get();
 
+        $models = $this->setAppruveStatus($models);
         $arr = $this->modelsAttributesToArray($models);
-        $arr = $this->setAppruveStatus($arr);
 
         return $arr;
     }
@@ -43,9 +43,9 @@ class ReservedRoomRepository extends CoreRepository
     {
         $arr = $arr->map(function ($item) {
             if ($item->is_appruved) {
-                $item->is_appruved = 'Подтверждена';
+                $item->appruvedStatus = 'Подтверждена';
             } else {
-                $item->is_appruved = 'Не подтверждена';
+                $item->appruvedStatus = 'Не подтверждена';
             }
             $item->user_name = !empty($item->user) ? $item->user->name : null;
 

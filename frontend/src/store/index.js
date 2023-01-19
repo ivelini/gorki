@@ -6,7 +6,8 @@ export default createStore({
           isAdmin: false
       },
       api: {
-          domain: 'http://127.0.0.1:8000'
+          domain: 'http://127.0.0.1:8000',
+          token: null,
       },
   },
   getters: {
@@ -15,6 +16,9 @@ export default createStore({
       },
       getApiDomain(state) {
           return state.api.domain
+      },
+      getApiToken(state) {
+          return state.api.token
       }
   },
   mutations: {
@@ -23,6 +27,10 @@ export default createStore({
               state.user.isAdmin = true :
               state.user.isAdmin = false
           state.user.name = user.name
+          state.user.id = user.id
+      },
+      updateToken(state, payload) {
+          state.api.token = payload.token
       }
   },
   actions: {

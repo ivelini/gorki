@@ -11,7 +11,7 @@
                         </a>
                         <div class="nav-collapse collapse">
                             <ul class="nav pull-right">
-                                <li>
+                                <li v-show="this.$store.getters.getApiToken">
                                     <router-link :to="{ name: 'home' }">Забронировать</router-link>
                                 </li>
                                 <li v-if="!this.$store.getters.getUser.name">
@@ -28,7 +28,7 @@
         </div>
     </div>
 
-    <router-view/>
+    <router-view v-show="this.$store.getters.getApiToken"/>
 
     <div>
     <footer>
@@ -47,30 +47,18 @@
 import { mapMutations } from 'vuex'
 
 export default {
-    data() {
-        return {
-            api: {
-              domain: 'http://127.0.0.1:8000'
-            },
-            user: {
-                name: '',
-                isAdmin: false
-            }
-        }
-    },
     mounted() {
-        if (this.getToken() != null) {
-            this.getUser()
-        }
+        this.getToken()
+        if (this.$store.getters.getApiToken != null) this.getUser()
     },
     methods: {
-        ...mapMutations(['registeredUser']),
+        ...mapMutations(['registeredUser', 'updateToken']),
         async getUser() {
-            let response = await fetch(`${ this.api.domain }/api/user`, {
+            let response = await fetch(`${ this.$store.getters.getApiDomain }/api/user`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${ this.getToken() }`
+                    'Authorization': `Bearer ${ this.$store.getters.getApiToken }`
                 }
             })
 
@@ -78,11 +66,13 @@ export default {
             this.$store.commit('registeredUser', user)
         },
         getToken() {
-            return localStorage.getItem('token')
+            let token =  localStorage.getItem('token')
+            if (token != null) this.$store.commit('updateToken', { token: token })
         },
         deleteToken() {
             localStorage.removeItem('token')
-            window.location.href = this.api.domain
+            this.$store.commit('updateToken', { token: null })
+            window.location.href = this.$store.getters.getApiDomain
         }
     }
 }

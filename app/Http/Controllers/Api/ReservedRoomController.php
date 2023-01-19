@@ -40,10 +40,10 @@ class ReservedRoomController extends Controller
 
         $date = new Carbon($data['date']);
 
-        $userModel = new ReservedRoom();
-        $userModel->user_id = !empty($data['userId']) ? $data['userId'] : $request->user()->id;
-        $userModel->reserverd_at = $date->format('Y-m-d');
-        $userModel->save();
+        $reservedRoomModel = new ReservedRoom();
+        $reservedRoomModel->user_id = !empty($data['userId']) ? $data['userId'] : $request->user()->id;
+        $reservedRoomModel->reserverd_at = $date->format('Y-m-d');
+        $reservedRoomModel->save();
 
         return ['status' => 'OK'];
     }
@@ -58,7 +58,17 @@ class ReservedRoomController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->input();
+        $date = new Carbon($data['date']);
+        $reservedRoomRepository = new ReservedRoomRepository();
+        $reservedRoomModel = $reservedRoomRepository->getModel('id', $id);
+
+        $reservedRoomModel->user_id = !empty($data['userId']) ? $data['userId'] : null;
+        $reservedRoomModel->reserverd_at = $date->format('Y-m-d');
+        $reservedRoomModel->is_appruved = !empty($data['isAppruved']);
+        $reservedRoomModel->save();
+
+        return ['status' => 'OK'];
     }
 
     /**
@@ -70,7 +80,7 @@ class ReservedRoomController extends Controller
     public function destroy(Request $request, $id)
     {
         $reservedRoom = (new ReservedRoomRepository)->getModel('id', $id);
-logger($request->user()->tokenCan('role:Administrator'));
+
         if (!empty($reservedRoom) && $reservedRoom->user_id == $request->user()->id ||
             $request->user()->tokenCan('role:admin') == true) {
 

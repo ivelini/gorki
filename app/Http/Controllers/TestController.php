@@ -16,7 +16,7 @@ class TestController extends Controller
     public function test(Request $request)
     {
         $userRepository = new UserRepository();
-        $reservedRoomRepository = new ReservedRoomRepository();
+        $reservedRoomRepogfhgfhgfhgfhsitory = new ReservedRoomRepository();
 
 
 

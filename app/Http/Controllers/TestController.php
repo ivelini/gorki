@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Repositories\ReservedRoomRepository;
 use App\Repositories\UserRepository;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Rqwqwqwqwqoute;
 
 class TestController extends Controller
 {
